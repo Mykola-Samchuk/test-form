@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./form.scss"
 import Modal from "../Modal/Modal";
+import User from "../User/User";
 
-export default function Form() {
+export default function Form () {
+  const[step, setStep] = useState(false)
   // form state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -57,44 +59,48 @@ export default function Form() {
   // Add user to localStorage
   const confirmHandler = () =>{
     localStorage.setItem("userEmail", email)
+    setStep(step+1)
   }
 
-  return (
-    <form className="form-wrapp">
-      <h1 className="form-title">Create an account</h1>
+  if(!step){
+    return (
+    
+      <form className="form-wrapp">
+        <h1 className="form-title">Create an account</h1>
+  
+        {emailDirty && emailError && <div style={{color:"red", fontSize: "12px", marginBottom: "5px"}}>{emailError}</div>}
+        <input
+          onChange={(e) => {emailHandler(e);}}
+          value={email}
+          onBlur={(e) => {blurHandler(e);}}
+          name="email"
+          type="text"
+          placeholder="Email (required)"
+        />
+        {passwordDirty && passwordError && <div style={{color:"red", fontSize: "12px", marginBottom: "5px"}}>{passwordError}</div>}
+        
+        <input
+          onChange={(e) => {passwordHandler(e);}}
+          value={password}
+          onBlur={(e) => {blurHandler(e);}}
+          name="password"
+          type="text"
+          placeholder="Password (required)"
+        />
+  
+        <button onClick={(e) => {registrationHandler(e);}} disabled={!formValid} className="btn">
+          Submit
+        </button>
+        <Modal active={modalActive} setActive={setModalActive}>
+          <h1>Please confirm account creation for "{email}"</h1>
+          <div className="btn-wrapp">
+              <button onClick={()=>{confirmHandler()}} className="btn">Confirm</button>
+            <button onClick={(e) => {cancelHandler(e);}} className="btn">Cancel</button>
+          </div>
+        </Modal>
+      </form>
+    );
+  }
+  else return <User/>
 
-      {emailDirty && emailError && <div style={{color:"red", fontSize: "12px", marginBottom: "5px"}}>{emailError}</div>}
-      <input
-        onChange={(e) => {emailHandler(e);}}
-        value={email}
-        onBlur={(e) => {blurHandler(e);}}
-        name="email"
-        type="text"
-        placeholder="Email (required)"
-      />
-      {passwordDirty && passwordError && <div style={{color:"red", fontSize: "12px", marginBottom: "5px"}}>{passwordError}</div>}
-      
-      <input
-        onChange={(e) => {passwordHandler(e);}}
-        value={password}
-        onBlur={(e) => {blurHandler(e);}}
-        name="password"
-        type="text"
-        placeholder="Password (required)"
-      />
-
-      <button onClick={(e) => {registrationHandler(e);}} disabled={!formValid} className="btn">
-        Submit
-      </button>
-      <Modal active={modalActive} setActive={setModalActive}>
-        <h1>Please confirm account creation for "{email}"</h1>
-        <div className="btn-wrapp">
-          <Link to={"/user"}>
-            <button onClick={()=>{confirmHandler()}} className="btn">Confirm</button>
-          </Link>
-          <button onClick={(e) => {cancelHandler(e);}} className="btn">Cancel</button>
-        </div>
-      </Modal>
-    </form>
-  );
 }
