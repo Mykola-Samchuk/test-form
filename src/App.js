@@ -6,6 +6,7 @@ import User from "./component/User/User";
 function App() {
   return (
     <div className="App">
+      <Form />
       <Routes basename="/form">
         <Route path="/" element={<Form />} />
         <Route path="/user" element={<User />} />
