@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react"; 
 import "./form.scss"
 import Modal from "../Modal/Modal";
 import User from "../User/User";
 
 export default function Form () {
+  // step for form
   const[step, setStep] = useState(false)
+
   // form state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,6 +15,7 @@ export default function Form () {
   const [emailError, setEmailError] = useState("Не може бути пустим");
   const [passwordError, setPaswordError] = useState("Не може бути пустим");
   const [formValid, setFormValid] = useState(false);
+
   // modal state
   const [modalActive, setModalActive] = useState(false);
 
@@ -22,7 +24,7 @@ export default function Form () {
     if (emailError || passwordError) {
       setFormValid(false);
     } else setFormValid(true);
-  });
+  }, [emailError, passwordError]);
 
   // Input handler
   const emailHandler = (e) => {
@@ -58,7 +60,6 @@ export default function Form () {
   };
   // Add user to localStorage
   const confirmHandler = () =>{
-    localStorage.setItem("userEmail", email)
     setStep(step+1)
   }
 
@@ -77,8 +78,8 @@ export default function Form () {
           type="text"
           placeholder="Email (required)"
         />
-        {passwordDirty && passwordError && <div style={{color:"red", fontSize: "12px", marginBottom: "5px"}}>{passwordError}</div>}
         
+        {passwordDirty && passwordError && <div style={{color:"red", fontSize: "12px", marginBottom: "5px"}}>{passwordError}</div>}
         <input
           onChange={(e) => {passwordHandler(e);}}
           value={password}
@@ -101,6 +102,6 @@ export default function Form () {
       </form>
     );
   }
-  else return <User/>
+  else return <User userEmail={email}/>
 
 }
